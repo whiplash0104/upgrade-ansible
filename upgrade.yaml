@@ -1,0 +1,11 @@
+---
+- name: actualiza
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Update OS
+    yum:
+      name: '*'
+      state: 'latest'
+
