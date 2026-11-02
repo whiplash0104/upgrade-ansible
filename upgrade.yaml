@@ -1,11 +1,27 @@
 ---
 - name: actualiza
-  hosts: all
+  hosts: apache
+  remote_port: 8822
   become: true
+  become_user: root
+  gather_facts: true
 
-  tasks:
-  - name: Update OS
-    yum:
+  task:
+    - name: Busca OS
+      ansible.builtin.debug:
+        msg:
+          - "sistema operativo es: {{ ansible_os_family }}"
+
+  - name: "Update OS {{ msg }}"
+    ansible.builtin.yum:
+      name: '{{ item }}'
+      state: 'latest'
+      loop: [ httpd, htop, sshd ]
+    when: ansible_os_faqmily == "RedHat"
+
+  - name: "Update OS {{ msg }}"
+    ansible.builtin.apt:
       name: '*'
       state: 'latest'
+    when: ansible_os_faqmily == "Debian"
 
